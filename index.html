@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LeetCode Premium Submissions Hub & Migration Tracker</title>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen font-sans selection:bg-indigo-505 selection:text-white antialiased">
+    
+    <!-- Outer Container -->
+    <div class="max-w-7xl mx-auto px-4 py-6 md:py-10">
+      
+      <!-- Top Sleek Header & System Status -->
+      <header class="border border-slate-800 bg-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between px-6 py-4 rounded-2xl mb-8 gap-4 shadow-xl">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-indigo-500/10">
+            LC
+          </div>
+          <div>
+            <h1 class="text-base md:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              LeetCode Submissions Hub <span class="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full border border-indigo-500/30">v2.0</span>
+            </h1>
+            <p class="text-xs text-slate-400 font-light mt-0.5">Automated synchronization database tracker & code migration system</p>
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap items-center justify-end gap-3 w-full md:w-auto">
+          <!-- Real-Time clock and status indicator -->
+          <div class="flex items-center space-x-2 text-xs font-mono text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full" id="utc-clock">
+            Retrieving Time...
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/50 px-3 py-1.5 rounded-full">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span>Submissions Synchronized</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Upper Side User Profile Interface & Live Analytics Dashboard -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+        
+        <!-- Interactive User ID Profile Card -->
+        <div class="lg:col-span-5 bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between shadow-xl relative overflow-hidden group">
+          <div class="absolute -right-16 -top-16 w-36 h-36 bg-indigo-600/10 rounded-full blur-2xl group-hover:bg-indigo-600/15 transition-all duration-500"></div>
+          
+          <div class="flex items-start justify-between z-10">
+            <div class="flex items-center space-x-4">
+              <!-- Ava Frame -->
+              <div class="relative">
+                <div class="w-14 h-14 bg-gradient-to-tr from-indigo-500 to-indigo-700 rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg border-2 border-slate-850">
+                  VP
+                </div>
+                <!-- Mini Verification Dot -->
+                <span class="absolute bottom-0 right-0 block h-3.5 w-3.5 rounded-full bg-indigo-500 border-2 border-slate-950"></span>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <h2 class="text-lg font-bold text-white tracking-tight" id="profile-id-display">vivek_pawar-3010</h2>
+                  <span class="px-2 py-0.5 text-[10px] bg-slate-800 border border-slate-700 text-indigo-400 font-mono rounded-md">PRO USER</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1" id="profile-email-display">vivek_pawar-3010@gmail.com</p>
+                <p class="text-[10px] text-indigo-400 font-mono mt-1 font-semibold hover:underline cursor-pointer flex items-center gap-1" id="switch-id-trigger">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  Customize Username
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick stat counts in profile card -->
+          <div class="grid grid-cols-3 gap-3 pt-6 mt-6 border-t border-slate-800 text-center">
+            <div>
+              <span class="block text-[10px] font-mono tracking-wider text-slate-450 uppercase">Submissions</span>
+              <span class="text-lg font-extrabold font-mono text-white mt-1 block" id="profile-stat-total">0</span>
+            </div>
+            <div>
+              <span class="block text-[10px] font-mono tracking-wider text-slate-450 uppercase">Solved Unique</span>
+              <span class="text-lg font-extrabold font-mono text-indigo-400 mt-1 block" id="profile-stat-unique">0</span>
+            </div>
+            <div>
+              <span class="block text-[10px] font-mono tracking-wider text-slate-450 uppercase">Accept Rate</span>
+              <span class="text-lg font-extrabold font-mono text-emerald-400 mt-1 block" id="profile-stat-rate">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Analytics & Breakdown Card -->
+        <div class="lg:col-span-7 bg-slate-950 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-slate-400 mb-3 flex items-center justify-between">
+              <span>🧮 Languages Distribution</span>
+              <span class="text-[10px] font-normal lowercase text-slate-500 font-sans">count of accepted codes</span>
+            </h3>
+            
+            <!-- Quick badge counters row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="lang-statistics-grid">
+              <!-- Rendered Dynamically -->
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col justify-center">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Java</span>
+                <span class="text-base font-bold text-emerald-400 mt-0.5">0 solved</span>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col justify-center">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">C++</span>
+                <span class="text-base font-bold text-amber-500 mt-0.5">0 solved</span>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col justify-center">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Python</span>
+                <span class="text-base font-bold text-indigo-400 mt-0.5">0 solved</span>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col justify-center">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Others</span>
+                <span class="text-base font-bold text-teal-400 mt-0.5">0 solved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic progress bar of top languages solved -->
+          <div class="mt-4 pt-4 border-t border-slate-9/10">
+            <span class="text-[10px] font-mono tracking-wider text-slate-450 uppercase block mb-2">Dominant Technology split</span>
+            <div class="h-2 rounded-full overflow-hidden flex bg-slate-800" id="technology-split-bar">
+              <!-- Filled in by JS -->
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Option Control Panel: Active Filters, Mode Selectors, & Search -->
+      <section class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl mb-8">
+        <h3 class="text-xs font-mono uppercase tracking-wider font-extrabold text-indigo-400 mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          Active Submissions Filter Workspace
+        </h3>
+
+        <div class="space-y-4">
+          
+          <!-- Outer Row: Language filter pills and Option views switches -->
+          <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-center">
+            
+            <!-- Language Pills Button Bar -->
+            <div class="xl:col-span-8 flex flex-wrap items-center gap-3">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs text-slate-400 font-mono mr-2 uppercase tracking-wide">Language:</span>
+                <div class="flex flex-wrap gap-1.5" id="language-filter-container">
+                  <!-- JavaScript appends language buttons dynamically based on loaded data -->
+                  <button class="px-3.5 py-1.5 bg-indigo-600 border border-indigo-500 rounded-lg text-xs font-semibold text-white cursor-pointer transition-all">All</button>
+                </div>
+              </div>
+              
+              <!-- C++ Only Tasks Filter Pill -->
+              <button id="tasks-only-toggle" class="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:border-amber-500/50 text-slate-400 hover:text-amber-400 text-[10.5px] font-mono font-bold rounded-lg cursor-pointer transition-all flex items-center gap-1.5 uppercase">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span>C++ Tasks Only</span>
+              </button>
+            </div>
+
+            <!-- View Mode Option Switches -->
+            <div class="xl:col-span-4 flex items-center justify-end gap-2 w-full">
+              <span class="text-xs text-slate-400 font-mono uppercase tracking-wide mr-1 shrink-0">View Workspace:</span>
+              <div class="p-1 bg-slate-900 border border-slate-800 rounded-xl flex gap-1 w-full sm:w-auto">
+                <button id="view-mode-all" class="flex-1 sm:flex-initial px-3.5 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg cursor-pointer transition-all uppercase tracking-wider">
+                  List Hub
+                </button>
+                <button id="view-mode-migration" class="flex-1 sm:flex-initial px-3.5 py-1.5 text-slate-400 hover:text-white text-xs font-bold rounded-lg cursor-pointer transition-all uppercase tracking-wider">
+                  Migration
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Row: Status pills, Live Text search filter, and entries count info -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center pt-3 border-t border-slate-850">
+            
+            <!-- Status Pills Button Bar -->
+            <div class="lg:col-span-6 flex flex-wrap items-center gap-1.5">
+              <span class="text-xs text-slate-400 font-mono mr-2 uppercase tracking-wide">Status:</span>
+              <div class="flex flex-wrap gap-1.5" id="status-filter-container">
+                <button data-status="all" class="px-3 py-1 bg-indigo-600 border border-indigo-505 rounded-md text-xs font-semibold text-white cursor-pointer transition-all">All</button>
+                <button data-status="accepted" class="px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md text-xs font-semibold text-slate-300 cursor-pointer transition-all">Accepted</button>
+                <button data-status="wrong answer" class="px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md text-xs font-semibold text-slate-300 cursor-pointer transition-all">Wrong Answer</button>
+                <button data-status="compile error" class="px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md text-xs font-semibold text-slate-300 cursor-pointer transition-all">Compile Error</button>
+                <button data-status="time limit exceeded" class="px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md text-xs font-semibold text-slate-300 cursor-pointer transition-all font-sans">TLE</button>
+              </div>
+            </div>
+
+            <!-- Live Text Search Filter Input -->
+            <div class="lg:col-span-6 relative w-full">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <input 
+                type="text" 
+                id="submissions-search" 
+                placeholder="Search queries by title slug, words, or full problem domain..."
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 placeholder-slate-550 text-slate-100 transition-all"
+              />
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Main Results Workspace Console -->
+      <main class="grid grid-cols-1 gap-6">
+        
+        <!-- View Pane 1: ALL SUBMISSIONS EXPLORER TABLE CARD -->
+        <section id="pane-all-explorer" class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-xl transition-all h-full">
+          <div class="border-b border-slate-850 px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/40">
+            <div>
+              <h3 class="text-sm font-bold text-white font-sans flex items-center gap-2">
+                📂 Live Questions Explorer Hub
+              </h3>
+              <p class="text-xs text-slate-400 font-light mt-0.5" id="stats-total-matched-text">Loading submissions database...</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <!-- Export current view as csv or json -->
+              <button 
+                id="export-filtered-csv"
+                class="flex-1 sm:flex-initial inline-flex justify-center items-center px-3.5 py-2 border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl cursor-pointer transition-all"
+              >
+                CSV Export
+              </button>
+              <button 
+                id="export-updated-json"
+                class="flex-1 sm:flex-initial inline-flex justify-center items-center px-3.5 py-2 border border-emerald-900/50 bg-emerald-950/20 hover:bg-emerald-950/40 text-emerald-400 text-xs font-semibold rounded-xl cursor-pointer transition-all gap-1.5"
+                title="Download updated leetcode_all_submissions.json file to persist your progress on GitHub"
+              >
+                <span>📥</span>
+                <span>JSON Export</span>
+              </button>
+              <!-- Backup manual loader btn -->
+              <button 
+                id="manually-trigger-scrapers"
+                class="flex-1 sm:flex-initial inline-flex justify-center items-center px-3.5 py-2 border border-transparent bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl cursor-pointer transition-all shadow-md"
+              >
+                Configure Scrapers
+              </button>
+            </div>
+          </div>
+
+          <!-- Submissions List Hub View -->
+          <div class="p-6">
+            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-left border-collapse text-xs md:text-sm">
+                <thead>
+                  <tr class="bg-slate-900/60 border-b border-slate-800 text-slate-400 font-mono text-[10px] tracking-wider uppercase">
+                    <th class="py-3.5 px-4 font-bold">Solved Query / Slug</th>
+                    <th class="py-3.5 px-4 font-bold text-center">Submissions</th>
+                    <th class="py-3.5 px-4 font-bold">Languages Solved</th>
+                    <th class="py-3.5 px-4 font-bold">Latest Date Solved</th>
+                    <th class="py-3.5 px-4 font-bold text-center">Open Path & Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="leetcode-sub-table-body" class="divide-y divide-slate-850 font-sans text-slate-300">
+                  <!-- Generated Dynamically -->
+                  <tr>
+                    <td colspan="5" class="py-12 text-center text-slate-500 font-light text-xs">
+                      <div class="inline-block w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span class="block mt-2">Loading and compiling local JSON archives automatically...</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table empty state -->
+            <div id="table-hub-empty-state" class="hidden text-center py-12 bg-slate-900/20 rounded-xl mt-4 border border-slate-900">
+              <p class="text-sm text-slate-400 font-light">Zero matching submissions align with your chosen filter. Clear filters to see full data.</p>
+            </div>
+
+            <!-- Custom Pagination Control Bar, conforming to mobile-first & fluid sizing -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-slate-850">
+              <span class="text-xs text-slate-400 font-sans font-light" id="pagination-stats-details">
+                Showing details 1-25 of 1130 items
+              </span>
+              <div class="flex items-center gap-2">
+                <!-- Page size selector -->
+                <span class="text-xs text-slate-500 font-mono">Row Density:</span>
+                <select id="pagination-page-size-selector" class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-400 focus:outline-none focus:border-indigo-500 mr-2">
+                  <option value="15">15</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                
+                <button id="pagination-prev" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 border border-slate-850 text-slate-300 text-xs font-mono font-bold rounded-lg cursor-pointer transition-all">
+                  ◄ Prev
+                </button>
+                <div class="px-3.5 py-1.5 bg-slate-900 border border-slate-850 rounded-lg font-mono text-xs text-indigo-400 font-semibold" id="pagination-page-indicator">
+                  Page 1 of 46
+                </div>
+                <button id="pagination-next" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 border border-slate-850 text-slate-300 text-xs font-mono font-bold rounded-lg cursor-pointer transition-all">
+                  Next ►
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- View Pane 2: CPP ➔ JAVA CONVERSION MIGRATION SUITE (Interactive Original Workspace) -->
+        <section id="pane-migration-suite" class="hidden grid grid-cols-1 gap-6 transition-all">
+          
+          <!-- Sync statistics panel -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="migration-stats-summary-bar">
+            <!-- Metric 1: Remaining -->
+            <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="block text-[10px] font-mono uppercase tracking-wider text-slate-400">Remaining C++ conversions</span>
+                <span class="text-3xl font-extrabold font-mono text-amber-500 block mt-1.5" id="migration-rem-counter">0</span>
+              </div>
+              <span class="px-2.5 py-1 text-[10px] uppercase font-mono bg-amber-500/10 text-amber-500 rounded border border-amber-500/20 font-bold">Needs Java</span>
+            </div>
+            <!-- Metric 2: Converted -->
+            <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="block text-[10px] font-mono uppercase tracking-wider text-slate-400">Converted C++ ➔ Java</span>
+                <span class="text-3xl font-extrabold font-mono text-emerald-500 block mt-1.5" id="migration-conv-counter">0</span>
+              </div>
+              <span class="px-2.5 py-1 text-[10px] uppercase font-mono bg-emerald-500/10 text-emerald-500 rounded border border-emerald-500/20 font-bold">Completed</span>
+            </div>
+            <!-- Metric 3: Total -->
+            <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center justify-between">
+              <div>
+                <span class="block text-[10px] font-mono uppercase tracking-wider text-slate-400">Total Solved in C++</span>
+                <span class="text-3xl font-extrabold font-mono text-indigo-400 block mt-1.5" id="migration-total-counter">0</span>
+              </div>
+              <div class="w-1/3 bg-slate-900 border border-slate-800 h-2.5 rounded-full overflow-hidden shrink-0 mt-2">
+                <div id="migration-counter-progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab buttons inside Migration Suite -->
+          <div class="bg-slate-950 border border-slate-850 rounded-2xl overflow-hidden p-6 shadow-xl">
+            <div class="flex border-b border-slate-855 pb-4 mb-4 gap-6 text-sm">
+              <button id="migration-tab-btn-remaining" class="pb-2 border-b-2 border-indigo-500 text-indigo-400 font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider">
+                Remaining (<span id="migration-tab-count-rem">0</span>)
+              </button>
+              <button id="migration-tab-btn-converted" class="pb-2 border-b-2 border-transparent text-slate-400 hover:text-white font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider">
+                Converted (<span id="migration-tab-count-conv">0</span>)
+              </button>
+            </div>
+
+            <!-- Migration Subtab content 1: Remaining -->
+            <div id="migration-tab-content-remaining" class="space-y-4">
+              <div class="overflow-x-auto rounded-xl border border-slate-800">
+                <table class="w-full text-left border-collapse text-xs md:text-sm">
+                  <thead>
+                    <tr class="bg-slate-900/60 border-b border-slate-805 text-slate-400 font-mono text-[10px] tracking-wider uppercase">
+                      <th class="py-3 px-4 font-bold">Unsolved Problem Title</th>
+                      <th class="py-3 px-4 font-bold">C++ Solved Date</th>
+                      <th class="py-3 px-4 font-bold">Known Solved Langs</th>
+                      <th class="py-3 px-4 font-bold">Workspace Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="migration-table-remaining-body" class="divide-y divide-slate-850 font-sans text-slate-300">
+                    <!-- JS code loads here -->
+                  </tbody>
+                </table>
+              </div>
+              <div id="migration-table-remaining-empty" class="hidden text-center py-12 text-slate-550 font-light text-xs">
+                Excellent work! All your checked C++ submissions have been migrated to Java modules.
+              </div>
+            </div>
+
+            <!-- Migration Subtab content 2: Converted -->
+            <div id="migration-tab-content-converted" class="hidden space-y-4">
+              <div class="overflow-x-auto rounded-xl border border-slate-800">
+                <table class="w-full text-left border-collapse text-xs md:text-sm">
+                  <thead>
+                    <tr class="bg-slate-900/60 border-b border-slate-805 text-slate-400 font-mono text-[10px] tracking-wider uppercase">
+                      <th class="py-3 px-4 font-bold">Migrated Problem Title</th>
+                      <th class="py-3 px-4 font-bold">C++ Solved Date</th>
+                      <th class="py-3 px-4 font-bold">Java Solved Date</th>
+                      <th class="py-3 px-4 font-bold">Conversion Interval</th>
+                      <th class="py-3 px-4 font-bold text-center">Path</th>
+                    </tr>
+                  </thead>
+                  <tbody id="migration-table-converted-body" class="divide-y divide-slate-850 font-sans text-slate-300">
+                    <!-- JS code loads here -->
+                  </tbody>
+                </table>
+              </div>
+              <div id="migration-table-converted-empty" class="hidden text-center py-12 text-slate-550 font-light text-xs">
+                No converted solutions detected yet in your active sync history.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Bottom Interactive Drawer: Sync Scrapers Configurator (Hidden/collapsed by default) -->
+      <section id="drawer-configuration" class="hidden bg-slate-950 border border-slate-800 hover:border-slate-700/80 rounded-2xl p-6 md:p-8 mt-8 shadow-2xl transition-all duration-300">
+        
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping"></span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono">🔧 Submissions Sync Scrapers Configuration</h3>
+          </div>
+          <button id="close-drawer-btn" class="text-slate-500 hover:text-white font-semibold text-xs border border-slate-800 bg-slate-900 px-3 py-1 rounded-lg transition-all cursor-pointer">
+            Close Panel
+          </button>
+        </div>
+
+        <!-- Copy of Tab Switcher -->
+        <div class="flex border-b border-slate-850 pb-3 mb-6 gap-6 text-xs md:text-sm">
+          <button 
+            id="config-tab-public" 
+            class="pb-2 border-b-2 border-indigo-600 text-indigo-400 font-semibold flex items-center gap-1.5 cursor-pointer transition-all"
+          >
+            Public Scraper (Quick 20 Submissions limit)
+          </button>
+          <button 
+            id="config-tab-local" 
+            class="pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-300 font-semibold flex items-center gap-1.5 cursor-pointer transition-all"
+          >
+            Local Session Cookie & Import (Load All 1130+ History)
+          </button>
+        </div>
+
+        <!-- Public Scraper panel -->
+        <div id="config-panel-public" class="transition-all">
+          <p class="text-xs text-slate-400 mb-4 max-w-3xl leading-relaxed">
+            Quickly poll recent submissions from public LeetCode GraphQL endpoints. Note: LeetCode restricts unauthorized public queries to the 20 most recent entries.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+            <!-- Username Input -->
+            <div class="md:col-span-5 space-y-2">
+              <label for="username-input" class="block text-[10px] font-semibold font-mono uppercase tracking-wider text-slate-400">
+                LeetCode Account ID Slug
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 text-xs font-mono">
+                  leetcode.com/
+                </span>
+                <input 
+                  type="text" 
+                  id="username-input" 
+                  value="vivek_pawar-3010"
+                  placeholder="type_username_here" 
+                  class="w-full pl-31 pr-4 py-3 bg-slate-900 border border-slate-800 rounded-xl font-mono text-sm focus:outline-none focus:ring-4 focus:ring-indigo-505/15 focus:border-indigo-500 text-white placeholder-slate-600"
+                />
+              </div>
+            </div>
+
+            <!-- Limit Selector -->
+            <div class="md:col-span-3 space-y-2">
+              <label for="limit-input" class="block text-[10px] font-semibold font-mono uppercase tracking-wider text-slate-400">
+                Scan Limit Offset
+              </label>
+              <select 
+                id="limit-input" 
+                class="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl font-mono text-xs focus:outline-none focus:ring-4 focus:ring-indigo-505/15 focus:border-indigo-500 text-slate-300"
+              >
+                <option value="20" selected>Last 20 (Direct Public Limit)</option>
+              </select>
+            </div>
+
+            <!-- Fetch Buttons -->
+            <div class="md:col-span-4 flex gap-2">
+              <button 
+                id="fetch-btn"
+                class="flex-1 inline-flex justify-center items-center px-4 py-3.5 border border-transparent text-xs font-semibold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all cursor-pointer font-sans shadow-lg"
+              >
+                <svg id="fetch-btn-icon" class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18c-.6 0-1-.4-1-1V3.536M12 7l-5 5H3.536"/>
+                </svg>
+                <span id="fetch-btn-text">Poll LeetCode API</span>
+              </button>
+              
+              <button 
+                id="load-sample-btn"
+                class="flex-1 inline-flex justify-center items-center px-4 py-3.5 border border-slate-800 bg-slate-900 hover:bg-slate-800 text-indigo-400 text-xs font-semibold rounded-xl active:scale-[0.98] transition-all cursor-pointer"
+              >
+                Restore Base Sample
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Local Cookie Import Panels -->
+        <div id="config-panel-local" class="hidden space-y-6 transition-all">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            
+            <div class="flex flex-col justify-between space-y-5">
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider font-mono">📁 Load New Submissions DB</h4>
+                <p class="text-xs text-slate-400 leading-relaxed font-sans">
+                  Instantly reload or seed a custom LeetCode archive. Grab your updated node-fetched <code class="font-mono bg-slate-900 px-1 py-0.5 rounded text-indigo-400">leetcode_all_submissions.json</code> dump and drop it here to recompile the dashboard analysis in microseconds!
+                </p>
+              </div>
+
+              <!-- Usability-compliant dropzone -->
+              <div 
+                id="drop-zone" 
+                class="border-2 border-dashed border-slate-800 hover:border-indigo-500 bg-slate-900/20 hover:bg-slate-900/40 rounded-2xl p-6 transition-all flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]"
+              >
+                <input type="file" id="file-input" class="hidden" accept=".json" />
+                <div class="p-3 bg-slate-900 border border-slate-850 text-indigo-400 rounded-full mb-2">
+                  <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                  </svg>
+                </div>
+                <p class="text-xs font-bold text-slate-300">
+                  Drag & Drop JSON File here
+                </p>
+                <p class="text-[10px] text-slate-500 font-mono mt-1">
+                  or click to select manually
+                </p>
+                
+                <!-- Display status when loaded -->
+                <div id="file-name-display" class="hidden mt-3 text-[11px] bg-emerald-950/40 text-emerald-400 border border-emerald-900/60 px-3 py-1 rounded-lg font-mono flex items-center justify-center gap-1.5">
+                  <span id="loaded-file-name">file_loaded.json</span>
+                </div>
+              </div>
+
+              <!-- Cookie helper box -->
+              <div class="bg-indigo-950/20 border border-indigo-900/40 rounded-xl p-4 space-y-3 font-sans text-xs">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+                    🔑 Auto Cookie Extractor Tool
+                  </span>
+                  <span class="text-[9px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 py-0.5 rounded uppercase font-mono border border-indigo-500/20">Secure</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-normal">
+                  Want to easily gather your complete archive? Paste your entire LeetCode Cookie string or document header parameters below, we will auto-isolate your active session!
+                </p>
+                <textarea 
+                  id="raw-helper-input"
+                  rows="3"
+                  placeholder="Paste Cookie Header block here directly..."
+                  class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg font-mono text-[10px] focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-300 placeholder-slate-700"
+                ></textarea>
+                
+                <div id="parser-result-box" class="hidden rounded-lg bg-slate-900 border border-slate-800 p-2.5 space-y-2">
+                  <div class="flex justify-between items-center text-[10px]">
+                    <span id="parser-result-status" class="font-bold text-emerald-400 flex items-center gap-1 font-mono">
+                      LEETCODE_SESSION Token Isolated!
+                    </span>
+                    <button 
+                      id="copy-extracted-cookie-btn" 
+                      class="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 rounded text-[9px] font-bold cursor-pointer hover:bg-indigo-500/20"
+                    >
+                      Copy Token
+                    </button>
+                  </div>
+                  <div class="font-mono text-[9px] bg-slate-950 p-2 rounded text-slate-500 break-all max-h-[60px] overflow-y-auto" id="extracted-cookie-display-masked">
+                    No token parsed
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right side Node offline script generator, conforming to workspace variables guidelines -->
+            <div class="flex flex-col space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-slate-400 text-xs font-mono">💻 Standalone Sync Script (Node.js)</span>
+                <button 
+                  id="copy-sync-script-btn" 
+                  class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all rounded-lg font-mono text-[10px] font-bold text-slate-300 cursor-pointer"
+                >
+                  Copy Javascript
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-normal">
+                This local script supports bulk compilation limits. Run the script on your terminal, write your cookies, generate the output, and drop it in this app tool.
+              </p>
+              <div class="bg-slate-950 border border-slate-900 rounded-xl p-4 overflow-auto max-h-[300px] font-mono text-[10px] text-slate-400 leading-relaxed select-text">
+                <pre id="sync-script-pre-code"></pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Full Loading and Status overlay -->
+      <div id="loading-state" class="hidden mb-8 p-12 text-center bg-slate-950 rounded-2xl border border-slate-800 shadow-xl">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-500/10 text-indigo-400 mb-4 animate-spin">
+          <svg class="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+        <h4 id="loading-title" class="text-xs font-mono uppercase tracking-wider font-bold text-slate-300">Processing Submissions Data</h4>
+        <p id="loading-body" class="text-xs text-slate-500 mt-2 font-light">Validating, analyzing, and structuring dataset indexes...</p>
+      </div>
+
+      <!-- Error State alerts -->
+      <div id="error-state" class="hidden mb-8 p-6 bg-rose-950/40 border border-rose-900/50 rounded-xl">
+        <div class="flex gap-4">
+          <div class="p-2 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl h-fit">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-rose-400">Sync Execution Alert</h4>
+            <p id="error-body" class="text-xs text-rose-300 mt-1">Service endpoint connection failed. Reconfigure username casing parameters.</p>
+            <button id="error-retry" class="mt-3 text-xs font-mono underline font-bold text-rose-300 hover:text-indigo-400 hover:no-underline transition-all cursor-pointer">
+              Retry Sync Sc scraper
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Vite module entry script -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

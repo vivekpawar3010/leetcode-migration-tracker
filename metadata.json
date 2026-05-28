@@ -1,0 +1,6 @@
+{
+  "name": "CPP to Java Tracker",
+  "description": "An interactive dashboard and synchronization utility to track LeetCode submissions, filter solved questions by language, and manage CPP to Java migration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
