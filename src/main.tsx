@@ -50,7 +50,7 @@ let currentPage: number = 1;
 let pageSize: number = 25;
 let activeUsername: string = 'vivek_pawar-3010';
 let activeEmail: string = 'vivek_pawar-3010@gmail.com';
-let activeMigrationTab: 'remaining' | 'converted' = 'remaining';
+let activeMigrationTab: 'remaining' | 'converted' | 'daily' = 'remaining';
 let extractedLeetCodeSession: string = '';
 let isTasksOnlyFilter: boolean = false;
 
@@ -75,6 +75,22 @@ window.addEventListener('DOMContentLoaded', () => {
 /**
  * Updates ticking UTC/system timeline.
  */
+function updateCoverageBadge(): void {
+  const coverageDateBadge = document.getElementById('coverage-date-badge');
+  if (!coverageDateBadge) return;
+
+  const now = new Date();
+  const todayDate = now.toISOString().slice(0, 10);
+
+  const javaTimestamps = submissions
+    .filter((sub) => normalizeLanguage(sub.lang) === 'java')
+    .map((sub) => typeof sub.timestamp === 'string' ? parseInt(sub.timestamp, 10) : sub.timestamp)
+    .filter((timestamp) => typeof timestamp === 'number' && !isNaN(timestamp));
+
+  const lastConversionDate = javaTimestamps.length > 0 ? formatDate(Math.max(...javaTimestamps)) : 'N/A';
+  coverageDateBadge.textContent = `Today: ${todayDate} | Last Conversion: ${lastConversionDate}`;
+}
+
 function startSystemClock(): void {
   const clockEl = document.getElementById('utc-clock');
   if (clockEl) {
@@ -82,6 +98,7 @@ function startSystemClock(): void {
       const now = new Date();
       const utcStr = now.toISOString().replace('T', ' ').substring(0, 19);
       clockEl.textContent = `System Time (UTC): ${utcStr}`;
+      updateCoverageBadge();
     };
     updateTime();
     setInterval(updateTime, 1000);
@@ -392,25 +409,48 @@ function setupDashboardControls(): void {
   // Subtab buttons inside Migration Pane
   const subBtnRem = document.getElementById('migration-tab-btn-remaining');
   const subBtnConv = document.getElementById('migration-tab-btn-converted');
-  if (subBtnRem && subBtnConv) {
-    subBtnRem.addEventListener('click', () => {
-      activeMigrationTab = 'remaining';
-      subBtnRem.className = 'pb-2 border-b-2 border-indigo-505 text-indigo-400 font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
-      subBtnConv.className = 'pb-2 border-b-2 border-transparent text-slate-400 hover:text-white font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
-      
-      document.getElementById('migration-tab-content-remaining')?.classList.remove('hidden');
-      document.getElementById('migration-tab-content-converted')?.classList.add('hidden');
+  const subBtnDaily = document.getElementById('migration-tab-btn-daily');
+  if (subBtnRem && subBtnConv && subBtnDaily) {
+    const setMigrationSubTab = (tab: 'remaining' | 'converted' | 'daily') => {
+      activeMigrationTab = tab;
+      const tabButtons = [subBtnRem, subBtnConv, subBtnDaily];
+      const tabContents = [
+        document.getElementById('migration-tab-content-remaining'),
+        document.getElementById('migration-tab-content-converted'),
+        document.getElementById('migration-tab-content-daily')
+      ];
+
+      tabButtons.forEach((btn, index) => {
+        const isActive = (index === 0 && tab === 'remaining') || (index === 1 && tab === 'converted') || (index === 2 && tab === 'daily');
+        if (isActive) {
+          btn.className = 'pb-2 border-b-2 border-indigo-505 text-indigo-400 font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
+        } else {
+          btn.className = 'pb-2 border-b-2 border-transparent text-slate-400 hover:text-white font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
+        }
+      });
+
+      tabContents.forEach((content, index) => {
+        const shouldShow = (index === 0 && tab === 'remaining') || (index === 1 && tab === 'converted') || (index === 2 && tab === 'daily');
+        if (shouldShow) {
+          content?.classList.remove('hidden');
+        } else {
+          content?.classList.add('hidden');
+        }
+      });
+
       updateDashboardViews();
+    };
+
+    subBtnRem.addEventListener('click', () => {
+      setMigrationSubTab('remaining');
     });
 
     subBtnConv.addEventListener('click', () => {
-      activeMigrationTab = 'converted';
-      subBtnConv.className = 'pb-2 border-b-2 border-indigo-505 text-indigo-400 font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
-      subBtnRem.className = 'pb-2 border-b-2 border-transparent text-slate-400 hover:text-white font-bold flex items-center gap-2 cursor-pointer text-xs md:text-sm transition-all uppercase tracking-wider';
-      
-      document.getElementById('migration-tab-content-converted')?.classList.remove('hidden');
-      document.getElementById('migration-tab-content-remaining')?.classList.add('hidden');
-      updateDashboardViews();
+      setMigrationSubTab('converted');
+    });
+
+    subBtnDaily.addEventListener('click', () => {
+      setMigrationSubTab('daily');
     });
   }
 
@@ -706,6 +746,8 @@ function updateDashboardViews(): void {
   } else {
     renderMigrationTrackerView();
   }
+
+  updateCoverageBadge();
 }
 
 /**
@@ -1229,6 +1271,69 @@ function renderMigrationTrackerView(): void {
         .join('');
     }
   }
+
+  renderDailyConversionTracker(convertedList);
+}
+
+function renderDailyConversionTracker(convertedList: ProblemTracker[]): void {
+  const tableBody = document.getElementById('migration-table-daily-body');
+  const emptyState = document.getElementById('migration-table-daily-empty');
+  const rangeEl = document.getElementById('daily-tracker-range');
+  const totalEl = document.getElementById('daily-tracker-total');
+  const daysEl = document.getElementById('daily-tracker-days');
+
+  const dailyCounts = new Map<string, number>();
+  convertedList.forEach((prob) => {
+    const day = prob.javaSolvedDate && prob.javaSolvedDate !== 'N/A' ? prob.javaSolvedDate : formatDate(prob.javaTimestamp || 0);
+    if (!day || day === 'N/A') return;
+    dailyCounts.set(day, (dailyCounts.get(day) || 0) + 1);
+  });
+
+  const sortedDays = Array.from(dailyCounts.keys()).sort((a, b) => b.localeCompare(a));
+  const totalConversions = convertedList.length;
+  const trackedDays = sortedDays.length;
+
+  if (rangeEl) {
+    if (sortedDays.length > 0) {
+      rangeEl.textContent = `${sortedDays[0]} → ${sortedDays[sortedDays.length - 1]}`;
+    } else {
+      rangeEl.textContent = 'No conversions recorded yet';
+    }
+  }
+
+  if (totalEl) {
+    totalEl.textContent = String(totalConversions);
+  }
+
+  if (daysEl) {
+    daysEl.textContent = String(trackedDays);
+  }
+
+  if (!tableBody || !emptyState) return;
+
+  if (sortedDays.length === 0) {
+    tableBody.innerHTML = '';
+    emptyState.classList.remove('hidden');
+    return;
+  }
+
+  emptyState.classList.add('hidden');
+
+  let runningTotal = 0;
+  tableBody.innerHTML = sortedDays
+    .map((day) => {
+      const count = dailyCounts.get(day) || 0;
+      runningTotal += count;
+
+      return `
+        <tr class="hover:bg-slate-900/50 transition-colors border-b border-slate-850">
+          <td class="py-3 px-4 font-mono text-cyan-300 text-xs">${escapeHTML(day)}</td>
+          <td class="py-3 px-4 font-bold text-emerald-400 text-xs">${count}</td>
+          <td class="py-3 px-4 font-mono text-slate-300 text-xs">${runningTotal}</td>
+        </tr>
+      `;
+    })
+    .join('');
 }
 
 /**
