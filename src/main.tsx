@@ -77,18 +77,20 @@ window.addEventListener('DOMContentLoaded', () => {
  */
 function updateCoverageBadge(): void {
   const coverageDateBadge = document.getElementById('coverage-date-badge');
+  const firstConversionHighlight = document.getElementById('highlight-first-conversion-date');
+  const lastConvHighlight = document.getElementById('highlight-last-conv-date');
   if (!coverageDateBadge) return;
 
   const now = new Date();
-  const todayDate = now.toISOString().slice(0, 10);
+  const todayDate = formatDate(now.getTime());
 
-  const javaTimestamps = submissions
-    .filter((sub) => normalizeLanguage(sub.lang) === 'java')
-    .map((sub) => typeof sub.timestamp === 'string' ? parseInt(sub.timestamp, 10) : sub.timestamp)
-    .filter((timestamp) => typeof timestamp === 'number' && !isNaN(timestamp));
+  const { convertedList } = buildMigrationTrackerData();
+  const firstConversionDate = '2026-05-28';
+  const lastConversionDate = convertedList.length > 0 ? convertedList[0].javaSolvedDate || 'N/A' : 'N/A';
 
-  const lastConversionDate = javaTimestamps.length > 0 ? formatDate(Math.max(...javaTimestamps)) : 'N/A';
   coverageDateBadge.textContent = `Today: ${todayDate} | Last Conversion: ${lastConversionDate}`;
+  if (firstConversionHighlight) firstConversionHighlight.textContent = firstConversionDate;
+  if (lastConvHighlight) lastConvHighlight.textContent = lastConversionDate;
 }
 
 function startSystemClock(): void {
@@ -1076,19 +1078,9 @@ function renderAllSubmissionsExplorer(): void {
 }
 
 /**
- * Calculations and logic for compiling comparative C++ to Java Migrations lists.
+ * Compiles the migration tracker lists from accepted submissions.
  */
-function renderMigrationTrackerView(): void {
-  // Select components inside Pane 2
-  const counterRem = document.getElementById('migration-rem-counter');
-  const counterConv = document.getElementById('migration-conv-counter');
-  const counterTotal = document.getElementById('migration-total-counter');
-  const progressLine = document.getElementById('migration-counter-progress-bar');
-
-  const tabCountRem = document.getElementById('migration-tab-count-rem');
-  const tabCountConv = document.getElementById('migration-tab-count-conv');
-
-  // Filter corresponding to "Accepted" solutions
+function buildMigrationTrackerData(): { remainingList: ProblemTracker[]; convertedList: ProblemTracker[] } {
   const accepted = submissions.filter(s => {
     const sLow = (s.statusDisplay || '').toLowerCase().trim();
     return sLow === 'accepted' || sLow === 'ac';
@@ -1159,6 +1151,24 @@ function renderMigrationTrackerView(): void {
   // Sort lists
   remainingList.sort((a, b) => b.cppSolvedDate.localeCompare(a.cppSolvedDate));
   convertedList.sort((a, b) => (b.javaTimestamp || 0) - (a.javaTimestamp || 0));
+
+  return { remainingList, convertedList };
+}
+
+/**
+ * Calculations and logic for compiling comparative C++ to Java Migrations lists.
+ */
+function renderMigrationTrackerView(): void {
+  // Select components inside Pane 2
+  const counterRem = document.getElementById('migration-rem-counter');
+  const counterConv = document.getElementById('migration-conv-counter');
+  const counterTotal = document.getElementById('migration-total-counter');
+  const progressLine = document.getElementById('migration-counter-progress-bar');
+
+  const tabCountRem = document.getElementById('migration-tab-count-rem');
+  const tabCountConv = document.getElementById('migration-tab-count-conv');
+
+  const { remainingList, convertedList } = buildMigrationTrackerData();
 
   // Write counters
   const remCount = remainingList.length;
@@ -1289,7 +1299,7 @@ function renderDailyConversionTracker(convertedList: ProblemTracker[]): void {
     dailyCounts.set(day, (dailyCounts.get(day) || 0) + 1);
   });
 
-  const sortedDays = Array.from(dailyCounts.keys()).sort((a, b) => b.localeCompare(a));
+  const sortedDays = Array.from(dailyCounts.keys()).sort((a, b) => a.localeCompare(b));
   const totalConversions = convertedList.length;
   const trackedDays = sortedDays.length;
 
